@@ -64,16 +64,6 @@ const NavLink = styled(navLink)`
   justify-content: flex-start;
   column-gap: 20px;
 
-  &::after {
-    width: 100%;
-    flex: 1;
-    content: "";
-    display: inline-block;
-    height: 2px;
-    background-color: ${({ theme }) => theme.white};
-    max-width: 0%;
-    transition: max-width 0.2s ease-in-out;
-  }
   &.active {
     font-weight: 700;
     opacity: 1;
@@ -171,44 +161,15 @@ const Sidebar = () => {
       />
       <Wrapper isOpen={isOpen}>
         <div>
-          <NavLink
-            to="/"
-            className={location.pathname?.includes("/pairs") ? "active" : ""}
-            onClick={() => close()}
-          >
-            Dashboard
-          </NavLink>
-          <NavLink to="/swap" onClick={() => close()}>
+          <NavLink to="/" onClick={() => close()}>
             Swap
           </NavLink>
+          <NavLink to="/swap?type=provide" onClick={() => close()}>
+            Liquidity
+          </NavLink>
           <div style={{ height: 25 }} />
-          <ChangeVersionButton />
         </div>
       </Wrapper>
-      <SocialMediaList isOpen={isOpen}>
-        {socialMediaList.map((item, index) => (
-          <Fragment key={item.href}>
-            <SocialMediaAnchor
-              className="desktop-only"
-              href={item.href}
-              target="_blank"
-              rel="noopener noreferrer"
-              title={item.title}
-              style={{ transitionDelay: `${index * 0.06 + 0.125}s` }}
-              iconSrc={item.icon}
-            />
-            <SocialMediaAnchor
-              className="mobile-only"
-              href={item.href}
-              target="_blank"
-              rel="noopener noreferrer"
-              title={item.title}
-              style={{ transitionDelay: `${index * 0.06 + 0.125}s` }}
-              iconSrc={item.iconLight}
-            />
-          </Fragment>
-        ))}
-      </SocialMediaList>
     </>
   )
 }

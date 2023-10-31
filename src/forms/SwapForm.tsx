@@ -880,7 +880,7 @@ const SwapForm = ({ type, tabs }: { type: Type; tabs: TabViewProps }) => {
 
   return (
     <Wrapper>
-      <Disclaimer />
+      {/* <Disclaimer /> */}
       {formState.isSubmitted && result && (
         <Container sm>
           <Result
