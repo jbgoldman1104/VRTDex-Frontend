@@ -11,7 +11,13 @@ body,
   height: 100%;
   font-size: $font-size;
   position: relative;
-  background-color: $realblue;
+  background: linear-gradient(
+    53deg,
+    rgba(11, 4, 72, 1) 0%,
+    rgba(18, 15, 96, 1) 33%,
+    rgba(0, 7, 17, 1) 100%
+  );
+  // background-color: $realblue;
   // background-image: url("images/img-background.png");
   background-size: cover;
   background-repeat: no-repeat;
