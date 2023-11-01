@@ -15,7 +15,7 @@ interface TerraswapNetwork {
   }
 }
 
-export const AVAILABLE_CHAIN_ID_LIST = ["phoenix-1", "pisco-1"]
+export const AVAILABLE_CHAIN_ID_LIST = ["atlantic-2"]
 
 const terraswapNetworks: Record<string, TerraswapNetwork> = {
   mainnet: {

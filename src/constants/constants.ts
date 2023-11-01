@@ -9,12 +9,12 @@ import iconDiscordLight from "images/icon-discord-primary.svg"
 import iconDocumentsLight from "images/icon-docs-primary.svg"
 
 /* terra:network */
-export const FINDER = "https://finder.terra.money"
+export const FINDER = "https://www.seiscan.app"
 export const CHROME = "https://google.com/chrome"
 
 /* terraswap:unit */
-export const ULUNA = "uluna"
-export const LUNA = "Luna"
+export const ULUNA = "usei"
+export const LUNA = "SEI"
 export const LP = "LP"
 export const USDC =
   "ibc/B3504E092456BA618CC28AC671A71FB08C6CA0FD0BE7C8A5B5A3E2DD933CC9E4"

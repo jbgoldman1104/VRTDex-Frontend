@@ -95,51 +95,51 @@ export default (config: Config, pairs: Pair[], type: string) => {
     setAvailableAddressList([])
 
     const fetchAvailableAddressList = async () => {
-      if (!oppositeValue) {
-        setAvailableAddressList(addressList)
-        return
-      }
+      // if (!oppositeValue) {
+      //   setAvailableAddressList(addressList)
+      //   return
+      // }
 
-      if (type === Type.SWAP) {
-        const res = await loadSwappableTokenAddresses(oppositeValue)
-        if (Array.isArray(res)) {
-          if (!isAborted) {
-            setAvailableAddressList(res)
-          }
-        }
-        return
-      }
-
-      if (type === Type.PROVIDE) {
-        const assetItemMap: Set<string> = new Set<string>()
-        pairs.forEach((pair) => {
-          if (
-            oppositeValue === pair.pair[0].contract_addr &&
-            !assetItemMap.has(pair.pair[1].contract_addr)
-          ) {
-            assetItemMap.add(pair.pair[1].contract_addr)
-          }
-
-          if (
-            oppositeValue === pair.pair[1].contract_addr &&
-            !assetItemMap.has(pair.pair[0].contract_addr)
-          ) {
-            assetItemMap.add(pair.pair[0].contract_addr)
-          }
-        })
-
+      // if (type === Type.SWAP) {
+      const res = await loadSwappableTokenAddresses(oppositeValue)
+      if (Array.isArray(res)) {
         if (!isAborted) {
-          setAvailableAddressList(Array.from(assetItemMap.values()))
+          setAvailableAddressList(res)
         }
-        return
       }
-      setAvailableAddressList(addressList)
+      //   return
+      // }
+
+      // if (type === Type.PROVIDE) {
+      //   const assetItemMap: Set<string> = new Set<string>()
+      //   pairs.forEach((pair) => {
+      //     if (
+      //       oppositeValue === pair.pair[0].contract_addr &&
+      //       !assetItemMap.has(pair.pair[1].contract_addr)
+      //     ) {
+      //       assetItemMap.add(pair.pair[1].contract_addr)
+      //     }
+
+      //     if (
+      //       oppositeValue === pair.pair[1].contract_addr &&
+      //       !assetItemMap.has(pair.pair[0].contract_addr)
+      //     ) {
+      //       assetItemMap.add(pair.pair[0].contract_addr)
+      //     }
+      //   })
+
+      //   if (!isAborted) {
+      //     setAvailableAddressList(Array.from(assetItemMap.values()))
+      //   }
+      //   return
+      // }
+      // setAvailableAddressList(addressList)
     }
 
     fetchAvailableAddressList()
 
     return () => {
-      isAborted = true
+      // isAborted = true
     }
   }, [
     addressList,
@@ -162,7 +162,7 @@ export default (config: Config, pairs: Pair[], type: string) => {
 
         return vA && vB ? 0 : vB === true ? 1 : vA === true ? -1 : 0
       })
-      .map((item) => {
+      .map((item: any) => {
         const isUnable = !availableAddressList?.includes(item)
 
         if (type === Type.WITHDRAW) {
@@ -181,11 +181,11 @@ export default (config: Config, pairs: Pair[], type: string) => {
           }
         }
 
-        const tokenInfo = tokenInfos.get(item)
+        const tokenInfo = item //tokenInfos.get(item)
         return {
           symbol: tokenInfo?.symbol || "",
           name: tokenInfo?.name || "",
-          contract_addr: item,
+          contract_addr: tokenInfo?.contract_addr,
           icon: [tokenInfo ? tokenInfo.icon : ""],
           verified: tokenInfo?.verified || false,
           isUnable,

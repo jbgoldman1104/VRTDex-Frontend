@@ -1,5 +1,6 @@
 import { PropsWithChildren, useEffect } from "react"
-import { useWallet, WalletStatus } from "@terra-money/wallet-provider"
+// import { useWallet, WalletStatus } from "@terra-money/wallet-provider"
+import { useWallet } from "@sei-js/react"
 import { DefaultOptions } from "@apollo/client"
 import Loading from "components/Loading"
 import { useModal } from "components/Modal"
@@ -12,14 +13,11 @@ export const DefaultApolloClientOptions: DefaultOptions = {
 }
 
 const Network: React.FC<PropsWithChildren<{}>> = ({ children }) => {
-  const { status, network: walletNetwork } = useWallet()
+  const { connectedWallet, chainId } = useWallet()
   const unsupportedNetworkModal = useModal()
   useEffect(() => {
     const timerId = setTimeout(() => {
-      if (
-        walletNetwork &&
-        !AVAILABLE_CHAIN_ID_LIST.includes(walletNetwork?.chainID)
-      ) {
+      if (connectedWallet && !AVAILABLE_CHAIN_ID_LIST.includes(chainId)) {
         unsupportedNetworkModal.open()
       }
     }, 10)
@@ -27,25 +25,11 @@ const Network: React.FC<PropsWithChildren<{}>> = ({ children }) => {
     return () => {
       clearTimeout(timerId)
     }
-  }, [unsupportedNetworkModal, walletNetwork])
+  }, [connectedWallet, chainId, unsupportedNetworkModal])
 
   return (
     <>
-      {status === WalletStatus.INITIALIZING ? (
-        <div
-          style={{
-            width: "100vw",
-            height: "100vh",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          <Loading />
-        </div>
-      ) : (
-        !unsupportedNetworkModal.isOpen && children
-      )}
+      {!unsupportedNetworkModal.isOpen && children}
       <UnsupportedNetworkModal isOpen={unsupportedNetworkModal.isOpen} />
     </>
   )

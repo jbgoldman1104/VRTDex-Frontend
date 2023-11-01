@@ -1,4 +1,5 @@
-import { NetworkInfo, useWallet } from "@terra-money/wallet-provider"
+// import { NetworkInfo, useWallet } from "@terra-money/wallet-provider"
+import { useWallet, WalletConnectButton } from "@sei-js/react"
 import {
   FC,
   PropsWithChildren,
@@ -23,17 +24,17 @@ const Page: FC<PropsWithChildren<Props>> = ({
   ...props
 }) => {
   const { sm } = props
-
-  const lastNetworkRef = useRef<NetworkInfo>()
-  const { network } = useWallet()
+  const { offlineSigner, connectedWallet, accounts, chainId } = useWallet()
+  const lastNetworkChainId = useRef<string>()
+  // const lastNetworkRef = useRef<NetworkInfo>()
+  // const { network } = useWallet()
   const [searchParams, setSearchParams] = useSearchParams()
 
   useLayoutEffect(() => {
     const timerId = setTimeout(() => {
       if (
-        network &&
-        lastNetworkRef.current &&
-        network?.name !== lastNetworkRef.current?.name &&
+        chainId &&
+        lastNetworkChainId.current !== chainId &&
         window.location.pathname.includes("/swap") &&
         searchParams &&
         setSearchParams
@@ -42,7 +43,7 @@ const Page: FC<PropsWithChildren<Props>> = ({
         searchParams.set("to", "")
         setSearchParams(searchParams, { replace: true })
       }
-      lastNetworkRef.current = network
+      lastNetworkChainId.current = chainId
     }, 10)
 
     return () => {
@@ -50,7 +51,7 @@ const Page: FC<PropsWithChildren<Props>> = ({
     }
     // #112: Do not add searchParams, setSearchParams to deps for performance reasons.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [network])
+  }, [connectedWallet, chainId])
 
   return (
     <article className={styles.article}>

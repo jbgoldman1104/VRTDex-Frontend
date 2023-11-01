@@ -1,4 +1,5 @@
-import { useChainOptions, useWallet } from "@terra-money/wallet-provider"
+// import { useChainOptions, useWallet } from "@terra-money/wallet-provider"
+import { useWallet } from "@sei-js/react"
 import { AVAILABLE_CHAIN_ID_LIST } from "constants/networks"
 import { useNetwork } from "hooks"
 import { useMemo } from "react"
@@ -58,21 +59,21 @@ const UnsupportedNetworkModal: React.FC<{ isOpen?: boolean }> = ({
   isOpen = false,
 }) => {
   const network = useNetwork()
-  const chainOptions = useChainOptions()
-  const { disconnect } = useWallet()
+  // const chainOptions = useChainOptions()
+  const { connectedWallet, accounts, chainId } = useWallet()
   const availableNetworks = useMemo(() => {
-    if (chainOptions?.walletConnectChainIds) {
-      const keys = Object.keys(chainOptions?.walletConnectChainIds).map(Number)
-      return keys
-        .filter((key) =>
-          AVAILABLE_CHAIN_ID_LIST.includes(
-            chainOptions?.walletConnectChainIds[key]?.chainID
-          )
-        )
-        .map((key) => chainOptions?.walletConnectChainIds[key])
-    }
+    // if (connectedWallet) {
+    //   const keys = Object.keys(accounts).map(Number)
+    //   return keys
+    //     .filter((key) =>
+    //       AVAILABLE_CHAIN_ID_LIST.includes(
+    //         chainOptions?.walletConnectChainIds[key]?.chainID
+    //       )
+    //     )
+    //     .map((key) => chainOptions?.walletConnectChainIds[key])
+    // }
     return []
-  }, [chainOptions])
+  }, [])
 
   return (
     <Modal isOpen={isOpen} close={() => {}} open={() => {}}>
@@ -95,7 +96,7 @@ const UnsupportedNetworkModal: React.FC<{ isOpen?: boolean }> = ({
                 fontWeight: 700,
               }}
             >
-              {availableNetworks
+              {[{ name: "testnet", chainID: "atlantic-2" }]
                 .map(
                   (availableNetwork) =>
                     `${availableNetwork.name}(${
@@ -123,7 +124,7 @@ const UnsupportedNetworkModal: React.FC<{ isOpen?: boolean }> = ({
             outline
             size="lg"
             onClick={() => {
-              disconnect()
+              connectedWallet?.disconnect(chainId)
               window.location.reload()
             }}
             style={{

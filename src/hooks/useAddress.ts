@@ -1,8 +1,9 @@
-import { useConnectedWallet } from "@terra-money/wallet-provider"
+import { useWallet } from "@sei-js/react"
 
 const useAddress = () => {
-  const connectedWallet = useConnectedWallet()
-  return connectedWallet?.terraAddress ?? ""
+  const { connectedWallet, accounts } = useWallet()
+  // const connectedWallet = useConnectedWallet()
+  return accounts[0]?.address ?? ""
 }
 
 export default useAddress

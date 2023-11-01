@@ -30,7 +30,7 @@ import { minus, gte, times, ceil, div } from "libs/math"
 import { TooltipIcon } from "components/Tooltip"
 import Tooltip from "lang/Tooltip.json"
 import useGasPrice from "rest/useGasPrice"
-import { Coins, CreateTxOptions, Numeric } from "@terra-money/terra.js"
+// import { Coins, CreateTxOptions, Numeric } from "@terra-money/terra.js"
 import { Type } from "pages/Swap"
 import usePool from "rest/usePool"
 import { insertIf, isNativeToken } from "libs/utils"
@@ -41,7 +41,18 @@ import Button from "components/Button"
 import MESSAGE from "lang/MESSAGE.json"
 import SwapConfirm from "./SwapConfirm"
 import useAPI from "rest/useAPI"
-import { TxResult, useLCDClient, useWallet } from "@terra-money/wallet-provider"
+// import { TxResult, useLCDClient, useWallet } from "@terra-money/wallet-provider"
+import { seiprotocol } from "@sei-js/proto"
+import {
+  useCosmWasmClient,
+  useSigningCosmWasmClient,
+  useWallet,
+  WalletConnectButton,
+  useQueryClient,
+  useSigningClient,
+} from "@sei-js/react"
+import { calculateFee } from "@cosmjs/stargate"
+
 import iconSettings from "images/icon-settings.svg"
 import iconReload from "images/icon-reload.svg"
 import { useModal } from "components/Modal"
@@ -80,7 +91,7 @@ const Warning = {
 }
 
 const SwapForm = ({ type, tabs }: { type: Type; tabs: TabViewProps }) => {
-  const connectModal = useConnectModal()
+  // const connectModal = useConnectModal()
   const [isWarningModalConfirmed, setIsWarningModalConfirmed] = useState(false)
   const warningModal = useModal()
 
@@ -94,8 +105,12 @@ const SwapForm = ({ type, tabs }: { type: Type; tabs: TabViewProps }) => {
   const { generateContractMessages } = useAPI()
   const { fee } = useNetwork()
   const walletAddress = useAddress()
-  const { post: terraExtensionPost } = useWallet()
-  const terra = useLCDClient()
+  // const { post: terraExtensionPost } = useWallet()
+  // const terra = useLCDClient()
+  const { offlineSigner, connectedWallet, accounts } = useWallet()
+  const { queryClient, isLoading: isQueryLoading } = useQueryClient()
+  const { signingClient, isLoading: isSignLoading } = useSigningClient()
+
   const settingsModal = useModal()
   const [txSettings, setTxSettings] = useLocalStorage<SettingValues>(
     "settings",
@@ -211,8 +226,10 @@ const SwapForm = ({ type, tabs }: { type: Type; tabs: TabViewProps }) => {
 
   const pairSwitchable = useMemo(() => from !== "" && to !== "", [from, to])
 
-  const { balance: balance1 } = useBalance(from, formData[Key.symbol1])
-  const { balance: balance2 } = useBalance(to, formData[Key.symbol2])
+  // const { balance: balance1 } = useBalance(from, formData[Key.symbol1])
+  // const { balance: balance2 } = useBalance(to, formData[Key.symbol2])
+  const balance1 = "0"
+  const balance2 = "0"
 
   const [feeAddress, setFeeAddress] = useState("")
   const fetchFeeAddress = useCallback(() => {
@@ -499,41 +516,41 @@ const SwapForm = ({ type, tabs }: { type: Type; tabs: TabViewProps }) => {
     ) => {
       const msg = Array.isArray(_msg) ? _msg[0] : _msg
 
-      if (msg?.execute_msg?.swap) {
-        msg.execute_msg.swap.belief_price = `${beliefPrice}`
-      }
-      if (msg?.execute_msg?.send?.msg?.swap) {
-        msg.execute_msg.send.msg.swap.belief_price = `${beliefPrice}`
-      }
-      if (msg?.execute_msg?.send?.msg?.execute_swap_operations) {
-        msg.execute_msg.send.msg.execute_swap_operations.minimum_receive =
-          parseInt(`${minimumReceived}`, 10).toString()
-        if (isNativeToken(token || "")) {
-          msg.coins = Coins.fromString(toAmount(`${amount}`) + token)
-        }
+      // if (msg?.execute_msg?.swap) {
+      //   msg.execute_msg.swap.belief_price = `${beliefPrice}`
+      // }
+      // if (msg?.execute_msg?.send?.msg?.swap) {
+      //   msg.execute_msg.send.msg.swap.belief_price = `${beliefPrice}`
+      // }
+      // if (msg?.execute_msg?.send?.msg?.execute_swap_operations) {
+      //   msg.execute_msg.send.msg.execute_swap_operations.minimum_receive =
+      //     parseInt(`${minimumReceived}`, 10).toString()
+      //   if (isNativeToken(token || "")) {
+      //     msg.coins = Coins.fromString(toAmount(`${amount}`) + token)
+      //   }
 
-        msg.execute_msg.send.msg = btoa(
-          JSON.stringify(msg.execute_msg.send.msg)
-        )
-      } else if (msg?.execute_msg?.send?.msg) {
-        msg.execute_msg.send.msg = btoa(
-          JSON.stringify(msg.execute_msg.send.msg)
-        )
-      }
-      if (msg?.execute_msg?.execute_swap_operations) {
-        msg.execute_msg.execute_swap_operations.minimum_receive = parseInt(
-          `${minimumReceived}`,
-          10
-        ).toString()
-        msg.execute_msg.execute_swap_operations.offer_amount = toAmount(
-          `${amount}`,
-          token
-        )
+      //   msg.execute_msg.send.msg = btoa(
+      //     JSON.stringify(msg.execute_msg.send.msg)
+      //   )
+      // } else if (msg?.execute_msg?.send?.msg) {
+      //   msg.execute_msg.send.msg = btoa(
+      //     JSON.stringify(msg.execute_msg.send.msg)
+      //   )
+      // }
+      // if (msg?.execute_msg?.execute_swap_operations) {
+      //   msg.execute_msg.execute_swap_operations.minimum_receive = parseInt(
+      //     `${minimumReceived}`,
+      //     10
+      //   ).toString()
+      //   msg.execute_msg.execute_swap_operations.offer_amount = toAmount(
+      //     `${amount}`,
+      //     token
+      //   )
 
-        if (isNativeToken(token || "")) {
-          msg.coins = Coins.fromString(toAmount(`${amount}`) + token)
-        }
-      }
+      //   if (isNativeToken(token || "")) {
+      //     msg.coins = Coins.fromString(toAmount(`${amount}`) + token)
+      //   }
+      // }
       return [msg]
     },
     []
@@ -749,120 +766,121 @@ const SwapForm = ({ type, tabs }: { type: Type; tabs: TabViewProps }) => {
     window.location.reload()
   }, [form])
 
-  const handleSubmit = useCallback<SubmitHandler<Partial<Record<Key, string>>>>(
-    async (values) => {
-      const { value1, value2, feeSymbol, gasPrice } = values
-      try {
-        settingsModal.close()
+  // const handleSubmit = useCallback<SubmitHandler<Partial<Record<Key, string>>>>(
+  //   async (values) => {
+  //     const { value1, value2, feeSymbol, gasPrice } = values
+  //     try {
+  //       settingsModal.close()
 
-        let msgs: any = {}
-        if (type === Type.SWAP) {
-          if (!profitableQuery?.msg) {
-            return
-          }
-          msgs = getMsgs(profitableQuery?.msg, {
-            amount: `${value1}`,
-            minimumReceived: profitableQuery
-              ? calc.minimumReceived({
-                  expectedAmount: `${profitableQuery?.simulatedAmount}`,
-                  max_spread: String(slippageTolerance),
-                  commission: "0",
-                  decimals: tokenInfo1?.decimals,
-                })
-              : "0",
-            token: from,
-            beliefPrice: `${decimal(div(value1, value2), 18)}`,
-          })
-        } else {
-          msgs = await generateContractMessages(
-            {
-              [Type.PROVIDE]: {
-                type: Type.PROVIDE,
-                sender: `${walletAddress}`,
-                fromAmount: `${value1}`,
-                toAmount: `${value2}`,
-                from: `${from}`,
-                to: `${to}`,
-                slippage: slippageTolerance,
-                deadline: Number(txDeadlineMinute),
-              },
-              [Type.WITHDRAW]: {
-                type: Type.WITHDRAW,
-                sender: `${walletAddress}`,
-                amount: `${value1}`,
-                lpAddr: `${lpContract}`,
-                minAssets: poolResult?.estimated
-                  .split("-")
-                  .map(
-                    (val, idx) =>
-                      Numeric.parse(val)
-                        .mul(
-                          Numeric.parse(
-                            (1 - Number(slippageTolerance)).toString()
-                          )
-                        )
-                        .toFixed(0) + (idx ? poolContract2 : poolContract1)
-                  )
-                  .join(","),
-                deadline: Number(txDeadlineMinute),
-              },
-            }[type] as any
-          )
-          msgs = msgs.map((msg: any) => {
-            return Array.isArray(msg) ? msg[0] : msg
-          })
-        }
+  //       let msgs: any = {}
+  //       if (type === Type.SWAP) {
+  //         if (!profitableQuery?.msg) {
+  //           return
+  //         }
+  //         msgs = getMsgs(profitableQuery?.msg, {
+  //           amount: `${value1}`,
+  //           minimumReceived: profitableQuery
+  //             ? calc.minimumReceived({
+  //                 expectedAmount: `${profitableQuery?.simulatedAmount}`,
+  //                 max_spread: String(slippageTolerance),
+  //                 commission: "0",
+  //                 decimals: tokenInfo1?.decimals,
+  //               })
+  //             : "0",
+  //           token: from,
+  //           beliefPrice: `${decimal(div(value1, value2), 18)}`,
+  //         })
+  //       } else {
+  //         msgs = await generateContractMessages(
+  //           {
+  //             [Type.PROVIDE]: {
+  //               type: Type.PROVIDE,
+  //               sender: `${walletAddress}`,
+  //               fromAmount: `${value1}`,
+  //               toAmount: `${value2}`,
+  //               from: `${from}`,
+  //               to: `${to}`,
+  //               slippage: slippageTolerance,
+  //               deadline: Number(txDeadlineMinute),
+  //             },
+  //             [Type.WITHDRAW]: {
+  //               type: Type.WITHDRAW,
+  //               sender: `${walletAddress}`,
+  //               amount: `${value1}`,
+  //               lpAddr: `${lpContract}`,
+  //               minAssets: poolResult?.estimated
+  //                 .split("-")
+  //                 .map(
+  //                   (val, idx) =>
+  //                     Numeric.parse(val)
+  //                       .mul(
+  //                         Numeric.parse(
+  //                           (1 - Number(slippageTolerance)).toString()
+  //                         )
+  //                       )
+  //                       .toFixed(0) + (idx ? poolContract2 : poolContract1)
+  //                 )
+  //                 .join(","),
+  //               deadline: Number(txDeadlineMinute),
+  //             },
+  //           }[type] as any
+  //         )
+  //         msgs = msgs.map((msg: any) => {
+  //           return Array.isArray(msg) ? msg[0] : msg
+  //         })
+  //       }
 
-        console.log(msgs)
+  //       console.log(msgs)
 
-        let txOptions: CreateTxOptions = {
-          msgs,
-          memo: undefined,
-          gasPrices: `${gasPrice}${
-            findTokenInfoBySymbolOrContractAddr(feeSymbol)?.contract_addr
-          }`,
-        }
+  //       let txOptions: CreateTxOptions = {
+  //         msgs,
+  //         memo: undefined,
+  //         gasPrices: `${gasPrice}${
+  //           findTokenInfoBySymbolOrContractAddr(feeSymbol)?.contract_addr
+  //         }`,
+  //       }
 
-        const signMsg = await terra.tx.create(
-          [{ address: walletAddress }],
-          txOptions
-        )
+  //       const signMsg = await terra.tx.create(
+  //         [{ address: walletAddress }],
+  //         txOptions
+  //       )
 
-        txOptions.fee = signMsg.auth_info.fee
-        setValue(
-          Key.feeValue,
-          txOptions.fee.amount.get(feeAddress)?.amount.toString() || ""
-        )
+  //       txOptions.fee = signMsg.auth_info.fee
+  //       setValue(
+  //         Key.feeValue,
+  //         txOptions.fee.amount.get(feeAddress)?.amount.toString() || ""
+  //       )
 
-        const extensionResult = await terraExtensionPost(txOptions)
+  //       const extensionResult = await terraExtensionPost(txOptions)
 
-        if (extensionResult) {
-          setResult(extensionResult)
-          return
-        }
-      } catch (error) {
-        console.error(error)
-        setResult(error as any)
-      }
-    },
-    [
-      settingsModal,
-      type,
-      terra,
-      walletAddress,
-      terraExtensionPost,
-      generateContractMessages,
-      from,
-      to,
-      slippageTolerance,
-      tokenInfo1,
-      getMsgs,
-      profitableQuery,
-      lpContract,
-    ]
-  )
+  //       if (extensionResult) {
+  //         setResult(extensionResult)
+  //         return
+  //       }
+  //     } catch (error) {
+  //       console.error(error)
+  //       setResult(error as any)
+  //     }
+  //   },
+  //   [
+  //     settingsModal,
+  //     type,
+  //     terra,
+  //     walletAddress,
+  //     terraExtensionPost,
+  //     generateContractMessages,
+  //     from,
+  //     to,
+  //     slippageTolerance,
+  //     tokenInfo1,
+  //     getMsgs,
+  //     profitableQuery,
+  //     lpContract,
+  //   ]
+  // )
 
-  const [result, setResult] = useState<TxResult | undefined>()
+  // const [result, setResult] = useState<TxResult | undefined>()
+  const [result, setResult] = useState()
   // hotfix: prevent modal closing when virtual keyboard is opened
   const lastWindowWidth = useRef(window.innerWidth)
   useEffect(() => {
@@ -885,14 +903,14 @@ const SwapForm = ({ type, tabs }: { type: Type; tabs: TabViewProps }) => {
         <Container sm>
           <Result
             response={result}
-            error={result instanceof Error ? result : undefined}
+            // error={result instanceof Error ? result : undefined}
             parserKey={type || "default"}
             onFailure={handleFailure}
           />
         </Container>
       )}
       <form
-        onSubmit={form.handleSubmit(handleSubmit, handleFailure)}
+        // onSubmit={form.handleSubmit(handleSubmit, handleFailure)}
         style={{ display: formState.isSubmitted ? "none" : "block" }}
       >
         <TabView
@@ -1114,7 +1132,7 @@ const SwapForm = ({ type, tabs }: { type: Type; tabs: TabViewProps }) => {
                       type: "submit",
                     }
                   : {
-                      onClick: () => connectModal.open(),
+                      // onClick: () => connectModal.open(),
                       type: "button",
                       children: MESSAGE.Form.Button.ConnectWallet,
                     })}
