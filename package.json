@@ -1,9 +1,9 @@
 {
-  "name": "terraswap-web-app",
+  "name": "vrtdex-web-app",
   "version": "1.0.0",
-  "homepage": "https://app.terraswap.com",
-  "repository": "github:terraswap/terraswap-web-app",
-  "author": "DELIGHT LABS <member@delightlabs.io>",
+  "homepage": "https://vrtdex.com",
+  "repository": "github:vrtdex/vrtdex-web-app",
+  "author": "Golden Dev",
   "license": "Apache-2.0",
   "dependencies": {
     "@apollo/client": "^3.2.4",

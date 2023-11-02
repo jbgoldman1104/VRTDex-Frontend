@@ -191,10 +191,9 @@ const useAPI = () => {
 
   const loadSwappableTokenAddresses = useCallback(
     async (from: string) => {
-      const res: string[] = (
-        await axios.get(`/tokens.json`, { params: { from } })
-      ).data
-      return res
+      const res: any[] = (await axios.get(`/tokens.json`, { params: { from } }))
+        .data
+      return res.filter((item) => item.contract_addr != from)
     },
     [service]
   )
