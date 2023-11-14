@@ -168,29 +168,29 @@ const Result = ({ response, error, onFailure, parserKey }: ResultProps) => {
       <>
         <div style={{ textAlign: "center", marginTop: 16 }}>
           <div>
-            {response?.logs?.map((_, index) => {
+            {/* {response?.logs?.map((_, index) => {
               const msgInfo = matchedMsg?.[index]
 
               return (
-                <>
-                  {/* {msgInfo
+                <> */}
+            {/* {msgInfo
                     ?.filter((msg) => !!msg?.transformed?.canonicalMsg)
                     .map((msg) =>
                       msg?.transformed?.canonicalMsg?.map((str) => ( */}
-                  <div style={{ color: "#5c5c5c", fontSize: 18 }}>
-                    {/* <TxDescription
+            <div style={{ color: "#5c5c5c", fontSize: 18 }}>
+              {/* <TxDescription
                             network={{ ...config, name: network?.name }}
                             config={{ printCoins: 3 }}
                           > */}
-                    {parserKey.toUpperCase()} Transaction
-                    {/* </TxDescription> */}
-                  </div>
-                  {/* ))
+              {parserKey.toUpperCase()} Transaction
+              {/* </TxDescription> */}
+            </div>
+            {/* ))
                     )} */}
-                  <br />
-                </>
+            {/* <br /> */}
+            {/* </>
               )
-            })}
+            })} */}
           </div>
         </div>
         <SwapTxInfo txInfo={txInfo} parserKey={parserKey} />
