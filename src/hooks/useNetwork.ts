@@ -5,16 +5,16 @@ import terraswapNetworks from "constants/networks"
 
 const useNetwork = () => {
   const { chainId, restUrl, rpcUrl } = useWallet()
-  const name = "testnet"
+
   const getFinderUrl = (address: string, path: string = "accounts") =>
     `${FINDER}/${chainId}/${path}/${address}`
 
   return {
-    ...terraswapNetworks[name],
+    ...terraswapNetworks[chainId],
     restUrl,
     rpcUrl,
     lcd: restUrl,
-    name,
+    name: chainId,
     chainID: chainId,
     getFinderUrl,
   }

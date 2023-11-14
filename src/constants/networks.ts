@@ -18,7 +18,7 @@ interface TerraswapNetwork {
 export const AVAILABLE_CHAIN_ID_LIST = ["atlantic-2"]
 
 const terraswapNetworks: Record<string, TerraswapNetwork> = {
-  mainnet: {
+  "pacific-1": {
     factory: "terra1466nf3zuxpya8q9emxukd7vftaf6h4psr0a07srl5zw74zh84yjqxl5qul",
     service:
       process.env.REACT_APP_MAINNET_SERVICE_URL || "https://api.terraswap.io/",
@@ -26,14 +26,14 @@ const terraswapNetworks: Record<string, TerraswapNetwork> = {
     router: "terra13ehuhysn5mqjeaheeuew2gjs785f6k7jm8vfsqg3jhtpkwppcmzqcu7chk",
     fee: { gasPrice: "0.15", amount: "1518", gas: "500000" },
   },
-  testnet: {
-    factory: "terra1jha5avc92uerwp9qzx3flvwnyxs3zax2rrm6jkcedy2qvzwd2k7qk7yxcl",
+  "atlantic-2": {
+    factory: "sei183x2m85wzczclrl5940lscylsufjr7gd346kt6gyes8wzt7p80cqjpmxh7",
     service:
-      process.env.REACT_APP_TESTNET_SERVICE_URL ||
-      "https://api-pisco.terraswap.io/",
-    dashboard: process.env.REACT_APP_TESTNET_DASHBOARD_URL,
-    router: "terra1xp6xe6uwqrspumrkazdg90876ns4h78yw03vfxghhcy03yexcrcsdaqvc8",
-    fee: { gasPrice: "0.15", amount: "1518", gas: "500000" },
+      process.env.REACT_APP_TESTNET_SERVICE_URL || "http://test-atlantic.com",
+    dashboard:
+      process.env.REACT_APP_TESTNET_DASHBOARD_URL || "http://test-atlantic.com",
+    router: "sei1fxp2r5v0xfd79tktjc04rp9punx58wxps9dww2razsm5egad9jssx2zq4t",
+    fee: { gasPrice: "0.1", amount: "1518", gas: "1000000" },
   },
 }
 

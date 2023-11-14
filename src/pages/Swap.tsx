@@ -8,6 +8,7 @@ export enum Type {
   "SWAP" = "swap",
   "PROVIDE" = "provide",
   "WITHDRAW" = "withdraw",
+  "CREATE_PAIR" = "create_pair",
 }
 
 // const tabs = [

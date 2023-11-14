@@ -37,7 +37,7 @@ const TxInfo = ({ txInfo, parserKey }: Props) => {
         const event = log.events
 
         const fromContract = event.find(
-          ({ type }) => type === "from_contract"
+          ({ type }) => type === "wasm"
         )?.attributes
 
         const format = (str: string) => {
@@ -61,7 +61,7 @@ const TxInfo = ({ txInfo, parserKey }: Props) => {
             if (!action) return undefined
           }
 
-          if (parserKey === "Swap") {
+          if (parserKey.toUpperCase() === "SWAP") {
             const action = fromContract.find(
               ({ key, value }) => key === "action" && value === "swap"
             )
@@ -83,7 +83,7 @@ const TxInfo = ({ txInfo, parserKey }: Props) => {
             const commission = fromContract.find(
               ({ key }) => key === "commission_amount"
             )
-            
+
             if (offerAsset && offerAmount) {
               let value = formatAsset(
                 offerAmount.value,
@@ -93,7 +93,7 @@ const TxInfo = ({ txInfo, parserKey }: Props) => {
             }
             if (askAsset && returnAmount) {
               const symbol = tokenInfos.get(askAsset.value)?.symbol
-              
+
               const toAmount = BigInt(returnAmount.value)
               let value = formatAsset(toAmount.toString(), symbol)
               reconstructed.push({ key: "To", value: value })
@@ -111,7 +111,7 @@ const TxInfo = ({ txInfo, parserKey }: Props) => {
                 })
               }
             }
-          } else if (parserKey === "Provide") {
+          } else if (parserKey.toUpperCase() === "PROVIDE") {
             const action = fromContract.find(
               ({ key, value }) =>
                 key === "action" && value === "provide_liquidity"
@@ -132,7 +132,7 @@ const TxInfo = ({ txInfo, parserKey }: Props) => {
               const value = formatAsset(share.value, "LP")
               reconstructed.push({ key: "Received", value: value })
             }
-          } else if (parserKey === "Withdraw") {
+          } else if (parserKey.toUpperCase() === "WITHDRAW") {
             const action = fromContract.find(
               ({ key, value }) =>
                 key === "action" && value === "withdraw_liquidity"

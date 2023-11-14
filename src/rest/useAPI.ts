@@ -4,9 +4,18 @@ import { useCallback } from "react"
 import useURL from "hooks/useURL"
 import axios from "./request"
 import { Type } from "pages/Swap"
-import { Msg } from "@terra-money/terra.js"
+import { Coin, Coins, Msg } from "@terra-money/terra.js"
+import { MsgExecuteContract } from "@terra-money/terra.js"
 import { AxiosError } from "axios"
 import { getDeadlineSeconds } from "libs/utils"
+import { getSigningCosmWasmClient } from "@sei-js/core"
+import { from } from "@apollo/client"
+import { DEFAULT_MAX_SPREAD } from "constants/constants"
+import { AnyNsRecord } from "dns"
+import { Params } from "@terra-money/terra.js/dist/core/ibc/applications/interchain-account/controller/Params"
+import { toAmount } from "libs/parse"
+
+const DECIMALS = 6
 
 interface DenomBalanceResponse {
   pagination: { next_key: string | null; total: string }
@@ -40,6 +49,13 @@ interface TokenInfo {
   symbol: string
   name: string
   contract_addr: string
+}
+
+interface PairContractResponse {
+  asset_decimals: [number]
+  liquidity_token: string
+  contract_addr: string
+  asset_infos: (NativeInfo | AssetInfo)[]
 }
 
 interface PairsResponse {
@@ -106,6 +122,13 @@ export function isNativeInfo(object: any): object is NativeInfo {
   return "native_token" in object
 }
 
+export function getAssetInfo(token: string): NativeInfo | AssetInfo {
+  if (token.startsWith("sei")) {
+    return { token: { contract_addr: token } }
+  }
+  return { native_token: { denom: "usei" } }
+}
+
 const useAPI = () => {
   const { lcd, factory, service } = useNetwork()
   const address = useAddress()
@@ -129,6 +152,26 @@ const useAPI = () => {
       return res.data
     },
     [address, getURL, lcd]
+  )
+
+  const loadPairContract = useCallback(
+    async (token1: string, token2: string) => {
+      try {
+        const url = getURL(
+          factory,
+          {
+            pair: { asset_infos: [getAssetInfo(token1), getAssetInfo(token2)] },
+          },
+          lcd
+        )
+        const res: PairContractResponse = (await axios.get(url)).data.data
+        return [res.contract_addr, res.liquidity_token]
+      } catch (error) {
+        console.log(error)
+        return []
+      }
+    },
+    [getURL, lcd, factory]
   )
 
   // useGasPrice
@@ -233,6 +276,217 @@ const useAPI = () => {
     [getURL, lcd]
   )
 
+  const generateSwapMessages = (
+    pairContractAddr: string,
+    param: any
+  ): MsgExecuteContract[] => {
+    let data: any[] = []
+
+    if (param.amount) {
+      param.amount = toAmount(param.amount, param.from)
+    }
+    // let pairContractAddr = "sei16zkheta2q6u4x7yg0k9kdhvlqlvstc5ueepj9n93a7yf0x2spyys28pwfr";
+    if (!param.from.startsWith("sei")) {
+      data = [
+        new MsgExecuteContract(param.sender, pairContractAddr, {
+          swap: {
+            deadline: param.deadline,
+            max_spread: param.max_spread,
+            belief_price: param.belief_price,
+            offer_asset: {
+              info: {
+                native_token: {
+                  denom: "usei",
+                },
+              },
+              amount: Number(param.amount).toString(),
+            },
+            to: param.to,
+          },
+        }),
+        new Coins([new Coin("usei", Number(param.amount))]),
+      ]
+    } else {
+      const payload =
+        /*btoa(JSON.stringify(*/
+        {
+          swap: {
+            belief_price: param.belief_price,
+            max_spread: param.max_spread,
+            to: param.to,
+            deadline: param.deadline,
+          },
+        }
+      // ));
+
+      data = [
+        new MsgExecuteContract(param.sender, param.from, {
+          send: {
+            contract: pairContractAddr,
+            amount: Number(param.amount).toString(),
+            msg: payload,
+          },
+        }),
+      ]
+    }
+
+    return data
+  }
+
+  const generateProvideMessages = (
+    pairContractAddr: string,
+    param: any
+  ): MsgExecuteContract[] => {
+    let data: MsgExecuteContract[] = []
+    // let pairContractAddr = "sei16zkheta2q6u4x7yg0k9kdhvlqlvstc5ueepj9n93a7yf0x2spyys28pwfr";
+
+    let coins: Coins.Input | undefined = undefined
+    if (param.fromAmount) {
+      param.fromAmount = toAmount(param.fromAmount, param.from)
+    }
+
+    if (param.toAmount) {
+      param.toAmount = toAmount(param.toAmount, param.from)
+    }
+
+    if (!param.from.startsWith("sei")) {
+      coins = new Coins([new Coin("usei", Number(param.fromAmount))])
+    } else {
+      data.push(
+        new MsgExecuteContract(param.sender, param.from, {
+          increase_allowance: {
+            spender: pairContractAddr,
+            amount: (Number(param.fromAmount) * 10 ** DECIMALS).toString(),
+          },
+        })
+      )
+    }
+
+    if (!param.to.startsWith("sei")) {
+      coins = new Coins([new Coin("usei", Number(param.toAmount))])
+    } else {
+      data.push(
+        new MsgExecuteContract(param.sender, param.to, {
+          increase_allowance: {
+            spender: pairContractAddr,
+            amount: (Number(param.toAmount) * 10 ** DECIMALS).toString(),
+          },
+        })
+      )
+    }
+
+    data.push(
+      new MsgExecuteContract(
+        param.sender,
+        pairContractAddr,
+        {
+          provide_liquidity: {
+            deadline: param.deadline,
+            slippage_tolerance: Number(param.slippage).toString(),
+            assets: [
+              {
+                info: getAssetInfo(param.from),
+                amount: Number(param.fromAmount).toString(),
+              },
+              {
+                info: getAssetInfo(param.to),
+                amount: Number(param.toAmount).toString(),
+              },
+            ],
+          },
+        },
+        coins
+      )
+    )
+
+    if (param.from.startsWith("sei")) {
+      data.push(
+        new MsgExecuteContract(param.sender, param.from, {
+          decrease_allowance: {
+            spender: pairContractAddr,
+            amount: (Number(param.fromAmount) * 10 ** DECIMALS).toString(),
+          },
+        })
+      )
+    }
+
+    if (param.to.startsWith("sei")) {
+      data.push(
+        new MsgExecuteContract(param.sender, param.to, {
+          decrease_allowance: {
+            spender: pairContractAddr,
+            amount: (Number(param.toAmount) * 10 ** DECIMALS).toString(),
+          },
+        })
+      )
+    }
+
+    return data
+  }
+
+  const generateCreatePairMessages = (
+    factory: string,
+    param: any
+  ): MsgExecuteContract[] => {
+    let data: any[] = []
+
+    if (param.fromAmount) {
+      param.fromAmount = toAmount(param.fromAmount, param.from)
+    }
+
+    if (param.toAmount) {
+      param.toAmount = toAmount(param.toAmount, param.from)
+    }
+
+    data = [
+      new MsgExecuteContract(param.sender, factory, {
+        create_pair: {
+          assets: [
+            {
+              info: getAssetInfo(param.from),
+              amount: "0",
+            },
+            {
+              info: getAssetInfo(param.to),
+              amount: "0",
+            },
+          ],
+        },
+      }),
+    ]
+    return data
+  }
+
+  const generateWidthrawMessages = (param: any): MsgExecuteContract[] => {
+    let data: any[] = []
+    // let pairContractAddr = "sei16zkheta2q6u4x7yg0k9kdhvlqlvstc5ueepj9n93a7yf0x2spyys28pwfr";
+    if (param.amount) {
+      param.amount = toAmount(param.amount, param.lpAddr)
+    }
+
+    const payload =
+      /*btoa(JSON.stringify(*/
+      {
+        withdraw_liquidity: {
+          min_assets: param.minAssets,
+          deadline: param.deadline,
+        },
+      }
+    // ));
+
+    data = [
+      new MsgExecuteContract(param.sender, param.lpAddr, {
+        send: {
+          contract: param.pairContract,
+          amount: Number(param.amount).toString(),
+          msg: payload,
+        },
+      }),
+    ]
+
+    return data
+  }
+
   const generateContractMessages = useCallback(
     async (
       query:
@@ -259,9 +513,16 @@ const useAPI = () => {
         | {
             type: Type.WITHDRAW
             lpAddr: string
+            pairContract: string
             amount: number | string
             sender: string
             minAssets?: string
+            deadline?: number
+          }
+        | {
+            type: Type.CREATE_PAIR
+            from: string
+            to: string
             deadline?: number
           }
     ) => {
@@ -270,20 +531,28 @@ const useAPI = () => {
       }
 
       const { type, ...params } = query
-      const url = `${service}/tx/${type}`.toLowerCase()
-      const res = (await axios.get(url, { params })).data
 
-      return res.map((data: Msg.Amino | Msg.Amino[]) => {
-        return (Array.isArray(data) ? data : [data]).map((item: Msg.Amino) => {
-          const result = Msg.fromAmino(item)
-          if ((result as any)?.execute_msg) {
-            return result
-          }
-          return Msg.fromAmino(item, true)
-        })
-      })
+      if (type === Type.SWAP) {
+        const [pairContract] = await loadPairContract(query.from, query.to)
+        return generateSwapMessages(pairContract, params)
+      }
+
+      if (type === Type.CREATE_PAIR) {
+        return generateCreatePairMessages(factory, params)
+      }
+
+      if (type === Type.PROVIDE) {
+        const [pairContract] = await loadPairContract(query.from, query.to)
+        return generateProvideMessages(pairContract, params)
+      }
+
+      if (type === Type.WITHDRAW) {
+        return generateWidthrawMessages(params)
+      }
+
+      return [] as MsgExecuteContract[]
     },
-    [service]
+    [loadPairContract, factory]
   )
 
   return {
@@ -291,6 +560,7 @@ const useAPI = () => {
     loadContractBalance,
     loadGasPrice,
     loadPairs,
+    loadPairContract,
     loadTokens,
     loadSwappableTokenAddresses,
     loadTokenInfo,

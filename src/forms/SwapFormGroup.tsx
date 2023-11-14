@@ -121,9 +121,9 @@ const SwapFormGroup = ({
       </div>
       <div className={styles.bottom}>
         {!skipFeedback && <p className={styles.feedback}>{error}</p>}
-        {feeSymbol && feeSelect && (
+        {/* {feeSymbol && feeSelect && (
           <FeeCombobox selected={feeSymbol} onSelect={feeSelect} />
-        )}
+        )} */}
       </div>
     </div>
   )

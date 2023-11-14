@@ -12,13 +12,9 @@ import Button from "components/Button"
 import SwapTxHash from "./SwapTxHash"
 import SwapTxInfo from "./SwapTxInfo"
 import styles from "./Result.module.scss"
-import {
-  CreateTxFailed,
-  TxFailed,
-  TxResult,
-  TxUnspecifiedError,
-  UserDenied,
-} from "@terra-dev/wallet-types"
+
+import { ExecuteResult } from "@cosmjs/cosmwasm-stargate"
+
 import axios from "rest/request"
 import { AxiosError } from "axios"
 
@@ -30,16 +26,9 @@ import {
 } from "@terra-money/log-finder-ruleset"
 import { TxInfo } from "@terra-money/terra.js"
 import { TxDescription } from "@terra-money/react-base-components"
-import { useLCDClient } from "@terra-money/wallet-provider"
 export interface ResultProps {
-  response?: TxResult
-  error?:
-    | UserDenied
-    | CreateTxFailed
-    | TxFailed
-    | TxUnspecifiedError
-    | AxiosError
-    | Error
+  response?: ExecuteResult
+  error?: Error
   onFailure: () => void
   parserKey: string
 }
@@ -55,10 +44,22 @@ enum STATUS {
 
 const Result = ({ response, error, onFailure, parserKey }: ResultProps) => {
   const network = useNetwork()
-  const { config } = useLCDClient()
+  const config = {
+    /**
+     * The base URL to which LCD requests will be made.
+     */
+    URL: network.lcd,
+    /**
+     * Chain ID of the blockchain to connect to.
+     */
+    chainID: network.chainID,
+  }
 
-  const txHash = response?.result?.txhash ?? ""
-  const raw_log = response?.result?.raw_log ?? ""
+  const txHash = response?.transactionHash ?? ""
+  const raw_log =
+    response?.logs && response?.logs.length > 0
+      ? response.logs[0].log
+      : undefined
   /* polling */
   const [txInfo, setTxInfo] = useState<TxInfo>()
 
@@ -91,20 +92,23 @@ const Result = ({ response, error, onFailure, parserKey }: ResultProps) => {
         return
       }
       try {
-        const { data: res } = await axios.get(`${lcd}/cosmos/tx/v1beta1/txs/${txHash}`, {
-          cache: { ignoreCache: true },
-        })
-        
+        const { data: res } = await axios.get(
+          `${lcd}/cosmos/tx/v1beta1/txs/${txHash}`,
+          {
+            cache: { ignoreCache: true },
+          }
+        )
+
         if (isDestroyed) {
           return
         }
-        
+
         if (res?.tx_response.code) {
           setTxInfo(res.tx_response)
           setStatus(STATUS.FAILURE)
           return
         }
-        
+
         if (res?.tx_response.txhash) {
           setTxInfo(res.tx_response)
           setStatus(STATUS.SUCCESS)
@@ -157,7 +161,6 @@ const Result = ({ response, error, onFailure, parserKey }: ResultProps) => {
     raw_log ||
     (error as AxiosError)?.response?.data?.message ||
     error?.message ||
-    (error instanceof UserDenied && MESSAGE.Result.DENIED) ||
     JSON.stringify(error)
 
   const content = {
@@ -165,25 +168,25 @@ const Result = ({ response, error, onFailure, parserKey }: ResultProps) => {
       <>
         <div style={{ textAlign: "center", marginTop: 16 }}>
           <div>
-            {response?.msgs?.map((_, index) => {
+            {response?.logs?.map((_, index) => {
               const msgInfo = matchedMsg?.[index]
 
               return (
                 <>
-                  {msgInfo
+                  {/* {msgInfo
                     ?.filter((msg) => !!msg?.transformed?.canonicalMsg)
                     .map((msg) =>
-                      msg?.transformed?.canonicalMsg?.map((str) => (
-                        <div style={{ color: "#5c5c5c", fontSize: 18 }}>
-                          <TxDescription
+                      msg?.transformed?.canonicalMsg?.map((str) => ( */}
+                  <div style={{ color: "#5c5c5c", fontSize: 18 }}>
+                    {/* <TxDescription
                             network={{ ...config, name: network?.name }}
                             config={{ printCoins: 3 }}
-                          >
-                            {str}
-                          </TxDescription>
-                        </div>
-                      ))
-                    )}
+                          > */}
+                    {parserKey.toUpperCase()} Transaction
+                    {/* </TxDescription> */}
+                  </div>
+                  {/* ))
+                    )} */}
                   <br />
                 </>
               )

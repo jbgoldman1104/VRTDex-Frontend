@@ -16,7 +16,7 @@ export default (contractAddress: string, symbol: string) => {
         setBalance("")
         return
       }
-      if (!contractAddress?.startsWith("terra")) {
+      if (!contractAddress?.startsWith("sei")) {
         loadDenomBalance().then((denomInfos) => {
           let hasDenom: boolean = false
           if (denomInfos !== undefined) {
