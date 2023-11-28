@@ -812,19 +812,17 @@ const SwapForm = ({ type, tabs }: { type: Type; tabs: TabViewProps }) => {
                 sender: `${walletAddress}`,
                 amount: `${value1}`,
                 lpAddr: `${lpContract}`,
-                minAssets: poolResult?.estimated
-                  .split("-")
-                  .map(
-                    (val, idx) =>
-                      Numeric.parse(val)
-                        .mul(
-                          Numeric.parse(
-                            (1 - Number(slippageTolerance)).toString()
-                          )
+                pairContract: `${selectedPairAddress}`,
+                minAssets: poolResult?.estimated.split("-").map(
+                  (val, idx) =>
+                    Numeric.parse(val)
+                      .mul(
+                        Numeric.parse(
+                          (1 - Number(slippageTolerance)).toString()
                         )
-                        .toFixed(0) + (idx ? poolContract2 : poolContract1)
-                  )
-                  .join(","),
+                      )
+                      .toFixed(0) + (idx ? poolContract2 : poolContract1)
+                ),
                 deadline: Number(txDeadlineMinute),
               },
               [Type.CREATE_PAIR]: {},
@@ -875,6 +873,7 @@ const SwapForm = ({ type, tabs }: { type: Type; tabs: TabViewProps }) => {
       generateContractMessages,
       to,
       txDeadlineMinute,
+      selectedPairAddress,
       lpContract,
       poolResult?.estimated,
       poolContract2,

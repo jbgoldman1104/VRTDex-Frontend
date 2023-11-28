@@ -59,8 +59,7 @@ interface PairContractResponse {
 }
 
 interface PairsResponse {
-  height: string
-  result: PairsResult
+  data: PairsResult
 }
 
 interface PairsResult {
@@ -186,45 +185,30 @@ const useAPI = () => {
     let result: PairsResult = {
       pairs: [],
     }
-    // let lastPair: (NativeInfo | AssetInfo)[] | null = null
+    let lastPair: (NativeInfo | AssetInfo)[] | null = null
 
-    // try {
-    //   const url = `${service}/pairs?unverified=true`
-    //   const res: PairsResult = (await axios.get(url)).data
+    while (true) {
+      const url = getURL(factory, {
+        pairs: { limit: 30, start_after: lastPair },
+      })
+      const pairs: PairsResponse = (await axios.get(url)).data
 
-    //   if (res?.pairs?.length) {
-    //     res.pairs.forEach((pair) => {
-    //       result.pairs.push(pair)
-    //     })
+      if (!Array.isArray(pairs?.data?.pairs)) {
+        // node might be down
+        break
+      }
 
-    //     return result
-    //   }
-    // } catch (error) {
-    //   console.error(error)
-    // }
+      if (pairs.data.pairs.length <= 0) {
+        break
+      }
 
-    // while (true) {
-    //   const url = getURL(factory, {
-    //     pairs: { limit: 30, start_after: lastPair },
-    //   })
-    //   const pairs: PairsResponse = (await axios.get(url)).data
-
-    //   if (!Array.isArray(pairs?.result?.pairs)) {
-    //     // node might be down
-    //     break
-    //   }
-
-    //   if (pairs.result.pairs.length <= 0) {
-    //     break
-    //   }
-
-    //   pairs.result.pairs.forEach((pair) => {
-    //     result.pairs.push(pair)
-    //   })
-    //   lastPair = pairs.result.pairs.slice(-1)[0]?.asset_infos
-    // }
+      pairs.data.pairs.forEach((pair) => {
+        result.pairs.push(pair)
+      })
+      lastPair = pairs.data.pairs.slice(-1)[0]?.asset_infos
+    }
     return result
-  }, [service, factory, getURL])
+  }, [factory, getURL])
 
   const loadTokens = useCallback(async (): Promise<TokenResult[]> => {
     const url = `/tokens.json`
@@ -464,15 +448,14 @@ const useAPI = () => {
       param.amount = toAmount(param.amount, param.lpAddr)
     }
 
-    const payload =
-      /*btoa(JSON.stringify(*/
-      {
+    const payload = btoa(
+      JSON.stringify({
         withdraw_liquidity: {
-          min_assets: param.minAssets,
+          // min_assets: param.minAssets,
           deadline: param.deadline,
         },
-      }
-    // ));
+      })
+    )
 
     data = [
       new MsgExecuteContract(param.sender, param.lpAddr, {

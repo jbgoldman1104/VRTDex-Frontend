@@ -218,7 +218,14 @@ export const useTokenInfos = () => {
 export const useLpTokenInfos = () => {
   const { isLoading: isPairsLoading } = usePairs()
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  const res = useMemo(() => new Map(lpTokenInfos), [isPairsLoading])
+  const res = useMemo(() => {
+    let result: Map<string, TokenInfo[]> = new Map<string, TokenInfo[]>()
+    Array.from(lpTokenInfos, ([key, value]) => {
+      result.set(key, value)
+    })
+    return result
+  }, [isPairsLoading])
+  // const res = useMemo(() => lpTokenInfos, [isPairsLoading])
   return res
 }
 

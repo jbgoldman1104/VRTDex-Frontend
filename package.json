@@ -35,8 +35,10 @@
     "axios-cache-adapter": "^2.7.3",
     "bignumber.js": "^9.0.1",
     "buffer": "^6.0.3",
+    "caniuse-lite": "^1.0.30001564",
     "chart.js": "^2.9.4",
     "classnames": "^2.2.6",
+    "crypto": "npm:crypto-browserify",
     "crypto-js": "^4.2.0",
     "graphql": "^15.3.0",
     "http-proxy-middleware": "^2.0.0",
@@ -62,8 +64,7 @@
     "source-map-explorer": "^2.5.0",
     "stream-browserify": "^3.0.0",
     "styled-components": "^5.3.5",
-    "typescript": "^4.4.2",
-    "crypto": "npm:crypto-browserify"
+    "typescript": "^4.4.2"
   },
   "browser": {
     "crypto": false
