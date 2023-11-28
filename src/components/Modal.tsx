@@ -3,7 +3,7 @@ import ReactModal from "react-modal"
 import styles from "./Modal.module.scss"
 import Icon from "./Icon"
 
-ReactModal.setAppElement("#terraswap")
+ReactModal.setAppElement("#vrtdex")
 
 const Modal: FC<Modal> = ({
   className,

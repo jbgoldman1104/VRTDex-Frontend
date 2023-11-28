@@ -7,7 +7,7 @@ import Network from "./layouts/Network"
 import App from "./layouts/App"
 import WalletConnectProvider from "./layouts/WalletConnectProvider"
 
-const container = document.getElementById("terraswap")
+const container = document.getElementById("vrtdex")
 const root = createRoot(container!)
 root.render(
   <StrictMode>

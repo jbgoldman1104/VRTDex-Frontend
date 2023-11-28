@@ -1,4 +1,3 @@
-import Dashboard from "pages/Dashboard"
 import PairPage from "pages/Dashboard/Pair"
 import { Route, Routes, Navigate } from "react-router-dom"
 
