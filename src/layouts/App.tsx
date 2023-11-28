@@ -58,10 +58,11 @@ const App = () => {
         {!isLoading && (
           <div>
             <Container>
-              <Wrapper>
+              <div style={{ flex: 1 }}>{routes()}</div>
+              {/* <Wrapper>
                 <div style={{ flex: 1, maxWidth: 150 }}>&nbsp;</div>
                 <div style={{ flex: 1 }}>{routes()}</div>
-              </Wrapper>
+              </Wrapper> */}
             </Container>
           </div>
         )}

@@ -42,7 +42,7 @@ export default function Navbar() {
             </li>
             <li>
               <NavLink
-                to="/feature"
+                to="/"
                 className={`px-5 py-3 lg:p-0 flex items-center relative hover:lg:text-white`}
                 onClick={closeOffCanvas}
               >
@@ -51,7 +51,7 @@ export default function Navbar() {
             </li>
             <li>
               <NavLink
-                to="/product"
+                to="/"
                 className={`px-5 py-3 lg:p-0 flex items-center relative hover:lg:text-white`}
                 onClick={closeOffCanvas}
               >
@@ -60,7 +60,7 @@ export default function Navbar() {
             </li>
             <li>
               <NavLink
-                to="/contact"
+                to="/"
                 className={`px-5 py-3 lg:p-0 flex items-center relative hover:lg:text-white`}
                 onClick={closeOffCanvas}
               >
@@ -69,11 +69,11 @@ export default function Navbar() {
             </li>
             <li>
               <Link
-                to="/contact"
+                to="/swap"
                 className={`btn mx-5 my-3 lg:m-0 inline-block lg:inline`}
                 onClick={closeOffCanvas}
               >
-                Download App
+                Launch App
               </Link>
             </li>
           </ul>

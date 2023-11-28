@@ -1,0 +1,75 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@import url("https://fonts.googleapis.com/css2?family=Oswald:wght@200;300;400;500;600;700&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Urbanist:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+
+@layer base {
+  * {
+    font-family: "Oswald", sans-serif;
+    color: #b2b0bb;
+  }
+
+  body {
+    background: #0a0c26;
+    overflow-x: hidden;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    color: #fff;
+  }
+
+  .btn {
+    @apply px-7 py-3 text-[#f5e8f3] uppercase text-base font-normal duration-300 transition-[background];
+    background: linear-gradient(
+      180deg,
+      rgb(75, 47, 186) 0%,
+      rgb(68, 192, 250) 100%
+    );
+    border: 3px solid;
+    border-image: linear-gradient(180deg, rgb(75, 47, 186), rgb(68, 192, 250)) 1;
+  }
+
+  .btn:hover {
+    background: transparent;
+  }
+
+  .active {
+    color: white !important;
+  }
+
+  .border1-section3,
+  .border2-section3 {
+    background: #0e0d1780;
+    border: solid 1px transparent;
+    border-radius: 20px;
+    background-origin: border-box;
+    background-clip: padding-box, border-box;
+  }
+
+  .border1-section3 {
+    background-image: linear-gradient(#0d0d1f, #0d0d1f),
+      linear-gradient(135deg, #e7f87e00, #85f8b0);
+  }
+
+  .border2-section3 {
+    background-image: linear-gradient(#0d0d1f, #0d0d1f),
+      linear-gradient(90deg, #45a2ed, #85f8b0);
+  }
+
+  @keyframes float {
+    0% {
+      transform: translatey(0px);
+    }
+    50% {
+      transform: translatey(-20px);
+    }
+    100% {
+      transform: translatey(0px);
+    }
+  }
+}

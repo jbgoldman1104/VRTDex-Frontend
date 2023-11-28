@@ -3,7 +3,7 @@ import ReactModal from "react-modal"
 import styles from "./Modal.module.scss"
 import Icon from "./Icon"
 
-ReactModal.setAppElement("#vrtdex")
+ReactModal.setAppElement("#root")
 
 const Modal: FC<Modal> = ({
   className,
