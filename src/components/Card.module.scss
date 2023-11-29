@@ -3,13 +3,14 @@
 
 .card {
   background: $darkblue;
-  border-radius: 15px;
+  // border-radius: 15px;
   max-width: 100%;
   position: relative;
+  background-color: #0a0c26;
 
-  &.lg {
-    border-radius: 20px;
-  }
+  // &.lg {
+  //   border-radius: 20px;
+  // }
 }
 
 .settings-on-mobile {

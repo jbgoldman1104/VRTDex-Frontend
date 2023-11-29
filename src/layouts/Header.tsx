@@ -76,13 +76,13 @@ const Header = () => {
             <img src={fullLogo} alt="Toolicles Full Logo" className="w-28" />
             <i className="fa-solid fa-xmark w-4" onClick={closeOffCanvas} />
           </div>
-          <button className="btn mx-5 lg:m-0 inline-block lg:inline">
-            {connectedWallet ? (
-              convertWalletAddress(accounts[0].address)
-            ) : (
-              <WalletConnectButton />
-            )}
-          </button>
+          {connectedWallet ? (
+            <button className="btn mx-5 lg:m-0 inline-block lg:inline">
+              {convertWalletAddress(accounts[0].address)}
+            </button>
+          ) : (
+            <WalletConnectButton buttonClassName="btn mx-5 lg:m-0 inline-block lg:inline" />
+          )}
         </div>
         <i
           onClick={openOffCanvas}

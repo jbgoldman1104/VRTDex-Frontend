@@ -24,10 +24,11 @@ $padding: 10px 10px;
 
 .border {
   @include transition(border-color);
-  border-radius: 10px;
-  border-width: 1px;
+  // border-radius: 10px;
+  border-width: 2px;
   border-style: solid;
-  border-color: #b5b5b5;
+  border-color: #4b2fba;
+  background: rgba(217, 217, 217, 0.12);
   padding: $padding;
   position: relative;
 
@@ -59,6 +60,7 @@ $padding: 10px 10px;
   .label,
   .field {
     flex: 1;
+    // margin-bottom: 10px;
   }
 
   .field {
@@ -125,4 +127,8 @@ $padding: 10px 10px;
   line-height: 14px;
   margin-bottom: 10px;
   text-align: left;
+}
+
+.default_input::placeholder {
+  color: #cecece;
 }

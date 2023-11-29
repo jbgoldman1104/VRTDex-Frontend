@@ -99,10 +99,19 @@ const SwapFormGroup = ({
                     input?.ref && input.ref(e)
                     inputRef.current = e
                   }}
+                  // type="string"
+                  className={styles.default_input}
                   style={{
                     fontSize: inputFontSize,
-                    height: 38,
-                    lineHeight: "38px",
+                    // height: 38,
+                    background: "transparent",
+                    color: "#CECECE",
+                    fontFamily: "Urbanist",
+                    fontStyle: "normal",
+                    fontWeight: 500,
+                    lineHeight: "120%",
+                    outline: "none",
+                    border: "none",
                   }}
                 />
               ) : textarea ? (
@@ -121,9 +130,6 @@ const SwapFormGroup = ({
       </div>
       <div className={styles.bottom}>
         {!skipFeedback && <p className={styles.feedback}>{error}</p>}
-        {/* {feeSymbol && feeSelect && (
-          <FeeCombobox selected={feeSymbol} onSelect={feeSelect} />
-        )} */}
       </div>
     </div>
   )

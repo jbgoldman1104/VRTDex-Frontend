@@ -35,7 +35,8 @@ import { Type } from "pages/Swap"
 import usePool from "rest/usePool"
 import { insertIf, isNativeToken } from "libs/utils"
 import { percent } from "libs/num"
-import SvgArrow from "images/arrow.svg"
+import SvgArrow from "images/home/arrow.svg"
+
 import SvgPlus from "images/plus.svg"
 import Button from "components/Button"
 import MESSAGE from "lang/MESSAGE.json"
@@ -54,8 +55,11 @@ import {
 } from "@sei-js/react"
 import { calculateFee } from "@cosmjs/stargate"
 
-import iconSettings from "images/icon-settings.svg"
-import iconReload from "images/icon-reload.svg"
+// import iconSettings from "images/icon-settings.svg"
+// import iconReload from "images/icon-reload.svg"
+import iconSettings from "images/home/setting.svg"
+import iconReload from "images/home/retry.svg"
+
 import { useModal } from "components/Modal"
 import Settings, { SettingValues } from "components/Settings"
 import useLocalStorage from "libs/useLocalStorage"

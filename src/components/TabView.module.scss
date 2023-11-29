@@ -2,6 +2,7 @@
 @import "src/styles/variables.module";
 
 $radius: 10px;
+// $blue: '#000000';
 
 .wrapper {
   @include flex(center);
@@ -33,19 +34,20 @@ $radius: 10px;
   overflow-x: auto;
   overflow-y: hidden;
   padding-bottom: 2px;
-
+  font-family: "Oswald", sans-serif !important;
+  color: white !important;
   &__item {
     @include flex;
     @include link;
 
     position: relative;
-    color: $blue;
-    font-size: 16px;
-    background: #ffffff;
+    // color: $blue;
+    font-size: 20px;
+    // background: #ffffff;
     margin-right: 20px;
     border: none;
     cursor: pointer;
-    font-weight: 400;
+    font-weight: 300;
     transition: font-weight 0.2s ease-in-out;
     &::after {
       content: "";
@@ -54,7 +56,8 @@ $radius: 10px;
       top: 100%;
       width: 0%;
       height: 2px;
-      background-color: $blue;
+      // background-color: $blue;
+      background-color: white;
       opacity: 0;
       transition: all 0.2s ease-in-out;
       transform: translateX(-50%);
@@ -65,11 +68,13 @@ $radius: 10px;
     }
 
     &__sizer {
-      font-weight: 700;
+      color: white;
+      font-weight: 500;
       opacity: 0;
     }
 
     &__label {
+      color: white;
       position: absolute;
     }
 
@@ -78,8 +83,8 @@ $radius: 10px;
     }
 
     &.active {
-      color: $blue;
-      font-weight: 700;
+      // color: $blue;
+      font-weight: 500;
       &::after {
         width: 100%;
         opacity: 1;
@@ -87,8 +92,8 @@ $radius: 10px;
     }
 
     &:hover {
-      font-weight: 700;
-      color: $blue;
+      font-weight: 500;
+      // color: $blue;
     }
   }
 }
@@ -97,8 +102,8 @@ $radius: 10px;
   @include flex(flex-end);
   flex: 1;
   &__item {
-    width: 24px;
-    height: 24px;
+    width: 20px;
+    height: 20px;
     background-size: contain;
     background-position: 50% 50%;
     background-repeat: no-repeat;
@@ -107,7 +112,7 @@ $radius: 10px;
     cursor: pointer;
     transition: transform 0.2s ease-in-out;
     transform: rotate(0deg);
-    margin-left: 10px;
+    margin-left: 20px;
 
     &:hover {
       transform: rotate(135deg);
