@@ -29,7 +29,6 @@
   top: 25px;
   text-align: right;
   z-index: 1;
-
   @include mobile {
     right: 16px;
   }
@@ -37,4 +36,8 @@
   span {
     cursor: pointer;
   }
+}
+
+.icon {
+  font-family: "Material Icons" !important;
 }

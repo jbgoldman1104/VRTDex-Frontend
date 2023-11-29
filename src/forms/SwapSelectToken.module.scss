@@ -3,26 +3,35 @@
 
 .button {
   @include flex;
+  align-items: center;
   color: $deepgray;
   padding: 0px 4px;
   padding-left: 10px;
 }
 
 .button:hover {
-  background-color: $semiblue;
+  // background-color: $semiblue;
+  background-color: #0a0c26;
+  // background-color: '#0A0C26';
   border-radius: 50px;
   padding-left: 10px;
-  height: 28px;
+  // height: 28px;
 }
 
 .logo {
-  margin-right: 5px;
-  margin-top: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .name {
   margin-left: 4px;
-  color: $deepgray;
+  // color: $deepgray;
+  color: white;
   font-weight: 600;
   font-size: 15px;
+}
+
+.icon {
+  font-family: "Material Icons" !important;
 }

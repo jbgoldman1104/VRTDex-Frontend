@@ -187,7 +187,12 @@ const SwapForm = ({ type, tabs }: { type: Type; tabs: TabViewProps }) => {
   useEffect(() => {
     if (!from && !to) {
       setTimeout(() => {
-        searchParams.set("from", type === Type.WITHDRAW ? InitLP : ULUNA)
+        searchParams.set(
+          "from",
+          type === Type.WITHDRAW
+            ? InitLP
+            : "sei1kge49027ve2kqc4d2z6rnlxwuq66vzx2y5d9z4wq444h662uh4ksud7zqd"
+        )
         setSearchParams(searchParams, { replace: true })
       }, 100)
     }
@@ -1121,11 +1126,31 @@ const SwapForm = ({ type, tabs }: { type: Type; tabs: TabViewProps }) => {
                   paddingTop: "20px",
                 }}
               >
-                <p>
+                <p style={{ color: "white" }}>
                   The displaying number is the simulated result and can be
                   different from the actual swap rate. Trade at your own risk.
                 </p>
               </div>
+              {/* {connectedWallet ? (
+                <Button
+                  {...{
+                    children: type || "Submit",
+                    loading: formState.isSubmitting,
+                    disabled:
+                      !formState.isValid ||
+                      formState.isValidating ||
+                      simulationContents?.length <= 0 ||
+                      (type === Type.SWAP &&
+                        (!profitableQuery || isAutoRouterLoading)),
+                    type: "submit",
+                  }}
+                  size="swap"
+                  submit
+                />
+              ) : (
+                <WalletConnectButton buttonClassName="btn mx-5 lg:m-0 inline-block lg:inline" />
+              )} */}
+
               <Button
                 {...(walletAddress
                   ? {
@@ -1138,8 +1163,10 @@ const SwapForm = ({ type, tabs }: { type: Type; tabs: TabViewProps }) => {
                         (type === Type.SWAP &&
                           (!profitableQuery || isAutoRouterLoading)),
                       type: "submit",
+                      className: "btn mx-5 lg:m-0 inline-block lg:inline",
                     }
                   : {
+                      className: "btn mx-5 lg:m-0 inline-block lg:inline",
                       // onClick: () => connectModal.open(),
                       type: "button",
                       children: MESSAGE.Form.Button.ConnectWallet,

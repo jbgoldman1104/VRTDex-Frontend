@@ -66,7 +66,7 @@ const App = () => {
             </Container>
           </div>
         )}
-        <Footer />
+        {/* <Footer /> */}
       </ThemeProvider>
     </QueryClientProvider>
   )

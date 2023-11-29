@@ -54,7 +54,7 @@ const CardHeader: FC<PropsWithChildren<Props>> = ({
       <>
         {goBack && (
           <button type="button" className={styles.action} onClick={goBack}>
-            <Icon name="arrow_back_ios" size={24} />
+            <Icon className={styles.icon} name="arrow_back_ios" size={24} />
           </button>
         )}
 

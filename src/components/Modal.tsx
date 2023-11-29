@@ -25,7 +25,12 @@ const Modal: FC<Modal> = ({
       {isCloseBtn && (
         <div className={styles.close}>
           <span onClick={close}>
-            <Icon name="close" size={30} color={"#0222BA"} />
+            <Icon
+              className={styles.icon}
+              name="close"
+              size={30}
+              color={"#0222BA"}
+            />
           </span>
         </div>
       )}
