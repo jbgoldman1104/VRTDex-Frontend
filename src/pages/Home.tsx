@@ -239,7 +239,7 @@ export default function Home() {
       </div>
       <div className="bg-[linear-gradient(90deg,#cb47a080_0%,#4a46c480_49.48%,#44b8f680_100%)] text-center py-11 relative">
         <div className="h-full w-1/2 blur-[370px] rounded-full absolute bg-[#00FF85] left-1/2 -translate-x-1/2 -top-2/3 -z-10"></div>
-        <h3 className="text-3xl md:text-5xl font-medium">Contact support</h3>
+        <h3 className="text-3xl md:text-5xl font-medium">Community</h3>
         <div className="flex flex-col md:flex-row items-center justify-center mt-7 space-y-5 md:space-y-0 md:space-x-24">
           <div className="flex items-center">
             <img src={discord} alt="" />

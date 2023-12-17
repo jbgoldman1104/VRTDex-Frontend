@@ -37,7 +37,7 @@ export default function Navbar() {
                 className={`px-5 py-3 lg:p-0 flex items-center relative hover:lg:text-white active`}
                 onClick={closeOffCanvas}
               >
-                Home
+                Litepaper
               </NavLink>
             </li>
             <li>
@@ -46,7 +46,7 @@ export default function Navbar() {
                 className={`px-5 py-3 lg:p-0 flex items-center relative hover:lg:text-white`}
                 onClick={closeOffCanvas}
               >
-                Feature
+                Airdrop
               </NavLink>
             </li>
             <li>
@@ -55,17 +55,25 @@ export default function Navbar() {
                 className={`px-5 py-3 lg:p-0 flex items-center relative hover:lg:text-white`}
                 onClick={closeOffCanvas}
               >
-                Product
+                Ai Bot
               </NavLink>
             </li>
             <li>
-              <NavLink
+              {/* <NavLink
                 to="/"
+              
                 className={`px-5 py-3 lg:p-0 flex items-center relative hover:lg:text-white`}
                 onClick={closeOffCanvas}
+              > */}
+              <a
+                href="mailto:abc@gmail.com"
+                style={{ color: "white" }}
+                className="px-5 py-3 lg:p-0 flex items-center relative hover:lg:text-white"
               >
                 Contact
-              </NavLink>
+              </a>
+              {/* Contact */}
+              {/* </NavLink> */}
             </li>
             <li>
               <Link
