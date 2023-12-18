@@ -23,7 +23,7 @@ const Swap = () => {
   const tabs = {
     tabs: [
       { name: Type.SWAP, title: "Swap" },
-      { name: Type.PROVIDE, title: "Provide" },
+      { name: Type.PROVIDE, title: "Liquidity" },
       { name: Type.WITHDRAW, title: "Withdraw" },
     ],
     selectedTabName: type,
