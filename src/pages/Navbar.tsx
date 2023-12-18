@@ -66,7 +66,7 @@ export default function Navbar() {
                 onClick={closeOffCanvas}
               > */}
               <a
-                href="mailto:abc@gmail.com"
+                href="mailto:support@vrtoken.com"
                 style={{ color: "white" }}
                 className="px-5 py-3 lg:p-0 flex items-center relative hover:lg:text-white"
               >
