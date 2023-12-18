@@ -61,7 +61,6 @@ export default function Navbar() {
             <li>
               {/* <NavLink
                 to="/"
-              
                 className={`px-5 py-3 lg:p-0 flex items-center relative hover:lg:text-white`}
                 onClick={closeOffCanvas}
               > */}
