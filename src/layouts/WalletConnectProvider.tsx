@@ -21,7 +21,7 @@ const WalletConnectProvider: React.FC<PropsWithChildren<{}>> = ({
     //Alternatively you can define your own custom wallet (see Keplr tab)
     <SeiWalletProvider
       chainConfiguration={{ chainId, restUrl, rpcUrl }}
-      wallets={["compass", "fin"]}
+      wallets={["compass", "fin", "keplr", "leap"]}
     >
       {children}
     </SeiWalletProvider>

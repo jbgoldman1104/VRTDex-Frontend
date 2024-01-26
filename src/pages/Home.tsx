@@ -14,6 +14,12 @@ import discord from "../images/home/discord.svg"
 import twitter from "../images/home/twitter.svg"
 import github from "../images/home/github.svg"
 import youtube from "../images/home/youtube.svg"
+import telegram from "../images/home/telegram.svg"
+
+const DISCORD_LINK = "https://discord.gg/83p5vJs7wW"
+const TELEGRAM_LINK = "https://t.me/+3ReBRcHlUm5lZDcx"
+const TWITTER_LINK = "https://x.com/vrtokens?t=FUr9K4CTyu7ZXnv3fshUvQ&s=08"
+const YOUTUBE_LINK = "https://www.youtube.com/channel/UCyk3wyqJVklSCBwoi9jovNA"
 
 export default function Home() {
   const [buyBtnHover, setBuyBtnHover] = useState(false)
@@ -241,19 +247,31 @@ export default function Home() {
         <div className="h-full w-1/2 blur-[370px] rounded-full absolute bg-[#00FF85] left-1/2 -translate-x-1/2 -top-2/3 -z-10"></div>
         <h3 className="text-3xl md:text-5xl font-medium">Community</h3>
         <div className="flex flex-col md:flex-row items-center justify-center mt-7 space-y-5 md:space-y-0 md:space-x-24">
-          <div className="flex items-center">
+          <div
+            className="flex items-center cursor-pointer"
+            onClick={() => window.open(YOUTUBE_LINK, "_blank")}
+          >
             <img src={discord} alt="" />
             <p className="text-2xl text-white">&nbsp;Discord</p>
           </div>
-          <div className="flex items-center">
+          <div
+            className="flex items-center cursor-pointer"
+            onClick={() => window.open(TWITTER_LINK, "_blank")}
+          >
             <img src={twitter} alt="" />
             <p className="text-2xl text-white">&nbsp;Twitter</p>
           </div>
-          <div className="flex items-center">
-            <img src={github} alt="" />
-            <p className="text-2xl text-white">&nbsp;GitHub</p>
+          <div
+            className="flex items-center cursor-pointer"
+            onClick={() => window.open(TELEGRAM_LINK, "_blank")}
+          >
+            <img src={telegram} alt="" />
+            <p className="text-2xl text-white">&nbsp;Telegram</p>
           </div>
-          <div className="flex items-center">
+          <div
+            className="flex items-center cursor-pointer"
+            onClick={() => window.open(YOUTUBE_LINK, "_blank")}
+          >
             <img src={youtube} alt="" />
             <p className="text-2xl text-white">&nbsp;YouTube</p>
           </div>

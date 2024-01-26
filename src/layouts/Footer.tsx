@@ -29,19 +29,19 @@ const Footer = () => {
         <div className="h-full w-1/2 blur-[370px] rounded-full absolute bg-[#00FF85] left-1/2 -translate-x-1/2 -top-2/3 -z-10"></div>
         <h3 className="text-3xl md:text-5xl font-medium">Community</h3>
         <div className="flex flex-col md:flex-row items-center justify-center mt-7 space-y-5 md:space-y-0 md:space-x-24">
-          <div className="flex items-center">
+          <div className="flex items-center cursor-pointer">
             <img src={discord} alt="" />
             <p className="text-2xl text-white">&nbsp;Discord</p>
           </div>
-          <div className="flex items-center">
+          <div className="flex items-center cursor-pointer">
             <img src={twitter} alt="" />
             <p className="text-2xl text-white">&nbsp;Twitter</p>
           </div>
-          <div className="flex items-center">
+          <div className="flex items-center cursor-pointer">
             <img src={github} alt="" />
             <p className="text-2xl text-white">&nbsp;GitHub</p>
           </div>
-          <div className="flex items-center">
+          <div className="flex items-center cursor-pointer">
             <img src={youtube} alt="" />
             <p className="text-2xl text-white">&nbsp;YouTube</p>
           </div>

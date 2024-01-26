@@ -35,7 +35,7 @@ export default function Navbar() {
               <NavLink
                 to="/"
                 className={`px-5 py-3 lg:p-0 flex items-center relative hover:lg:text-white active`}
-                onClick={closeOffCanvas}
+                onClick={() => window.open("/whitepaper.pdf", "_blank")}
               >
                 Litepaper
               </NavLink>
