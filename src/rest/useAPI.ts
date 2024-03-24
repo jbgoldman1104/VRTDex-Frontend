@@ -269,7 +269,6 @@ const useAPI = () => {
     if (param.amount) {
       param.amount = toAmount(param.amount, param.from)
     }
-    // let pairContractAddr = "sei16zkheta2q6u4x7yg0k9kdhvlqlvstc5ueepj9n93a7yf0x2spyys28pwfr";
     if (!param.from.startsWith("sei")) {
       data = [
         new MsgExecuteContract(param.sender, pairContractAddr, {
@@ -285,7 +284,7 @@ const useAPI = () => {
               },
               amount: Number(param.amount).toString(),
             },
-            to: param.to,
+            // to: param.to,
           },
         }),
         new Coins([new Coin("usei", Number(param.amount))]),
@@ -297,7 +296,7 @@ const useAPI = () => {
           swap: {
             belief_price: param.belief_price,
             max_spread: param.max_spread,
-            to: param.to,
+            // to: param.to,
             deadline: param.deadline,
           },
         }
@@ -322,7 +321,6 @@ const useAPI = () => {
     param: any
   ): MsgExecuteContract[] => {
     let data: MsgExecuteContract[] = []
-    // let pairContractAddr = "sei16zkheta2q6u4x7yg0k9kdhvlqlvstc5ueepj9n93a7yf0x2spyys28pwfr";
 
     let coins: Coins.Input | undefined = undefined
     if (param.fromAmount) {
@@ -443,7 +441,6 @@ const useAPI = () => {
 
   const generateWidthrawMessages = (param: any): MsgExecuteContract[] => {
     let data: any[] = []
-    // let pairContractAddr = "sei16zkheta2q6u4x7yg0k9kdhvlqlvstc5ueepj9n93a7yf0x2spyys28pwfr";
     if (param.amount) {
       param.amount = toAmount(param.amount, param.lpAddr)
     }

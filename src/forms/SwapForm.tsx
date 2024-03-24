@@ -18,6 +18,7 @@ import {
   toAmount,
   findTokenInfoBySymbolOrContractAddr,
 } from "libs/parse"
+import { useNavigate } from "react-router-dom"
 import calc from "helpers/calc"
 import { PriceKey, BalanceKey } from "hooks/contractKeys"
 import Count from "components/Count"
@@ -97,7 +98,7 @@ const Warning = {
 }
 
 const SwapForm = ({ type, tabs }: { type: Type; tabs: TabViewProps }) => {
-  // const connectModal = useConnectModal()
+  const navigate = useNavigate()
   const [isWarningModalConfirmed, setIsWarningModalConfirmed] = useState(false)
   const warningModal = useModal()
 
@@ -191,7 +192,7 @@ const SwapForm = ({ type, tabs }: { type: Type; tabs: TabViewProps }) => {
           "from",
           type === Type.WITHDRAW
             ? InitLP
-            : "sei1kge49027ve2kqc4d2z6rnlxwuq66vzx2y5d9z4wq444h662uh4ksud7zqd"
+            : "sei12q3zzncykpjtn09znp5qvkxf8ycgjmqkj3kdk3xhf8n8s0ts7ghs039p4s"
         )
         setSearchParams(searchParams, { replace: true })
       }, 100)
@@ -531,6 +532,14 @@ const SwapForm = ({ type, tabs }: { type: Type; tabs: TabViewProps }) => {
 
       if (msg?.execute_msg?.swap) {
         msg.execute_msg.swap.belief_price = `${beliefPrice}`
+        if (isNativeToken(token || "")) {
+          msg.coins = [
+            {
+              denom: token,
+              amount: `${parseFloat(amount as string) * 1000000}`,
+            },
+          ]
+        }
       }
       if (msg?.execute_msg?.send?.msg?.swap) {
         msg.execute_msg.send.msg.swap.belief_price = `${beliefPrice}`
@@ -777,6 +786,7 @@ const SwapForm = ({ type, tabs }: { type: Type; tabs: TabViewProps }) => {
     }, 125)
     setResult(undefined)
     window.location.reload()
+    navigate(`/swap`)
   }, [form])
 
   const handleSubmit = useCallback<SubmitHandler<Partial<Record<Key, string>>>>(
@@ -1131,7 +1141,7 @@ const SwapForm = ({ type, tabs }: { type: Type; tabs: TabViewProps }) => {
                   different from the actual swap rate. Trade at your own risk.
                 </p>
               </div>
-              {/* {connectedWallet ? (
+              {connectedWallet ? (
                 <Button
                   {...{
                     children: type || "Submit",
@@ -1148,32 +1158,9 @@ const SwapForm = ({ type, tabs }: { type: Type; tabs: TabViewProps }) => {
                   submit
                 />
               ) : (
-                <WalletConnectButton buttonClassName="btn mx-5 lg:m-0 inline-block lg:inline" />
-              )} */}
-
-              <Button
-                {...(walletAddress
-                  ? {
-                      children: type || "Submit",
-                      loading: formState.isSubmitting,
-                      disabled:
-                        !formState.isValid ||
-                        formState.isValidating ||
-                        simulationContents?.length <= 0 ||
-                        (type === Type.SWAP &&
-                          (!profitableQuery || isAutoRouterLoading)),
-                      type: "submit",
-                      className: "btn mx-5 lg:m-0 inline-block lg:inline",
-                    }
-                  : {
-                      className: "btn mx-5 lg:m-0 inline-block lg:inline",
-                      // onClick: () => connectModal.open(),
-                      type: "button",
-                      children: MESSAGE.Form.Button.ConnectWallet,
-                    })}
-                size="swap"
-                submit
-              />
+                <></>
+                // <WalletConnectButton buttonClassName="btn mx-5 lg:m-0 inline-block lg:inline" />
+              )}
             </div>
           </Container>
         </TabView>

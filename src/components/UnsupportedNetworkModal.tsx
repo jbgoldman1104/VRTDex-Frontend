@@ -96,7 +96,8 @@ const UnsupportedNetworkModal: React.FC<{ isOpen?: boolean }> = ({
                 fontWeight: 700,
               }}
             >
-              {[{ name: "testnet", chainID: "atlantic-2" }]
+              {[{ name: "mainnet", chainID: "pacific-1" }]
+                // {[{ name: "testnet", chainID: "atlantic-2" }]
                 .map(
                   (availableNetwork) =>
                     `${availableNetwork.name}(${

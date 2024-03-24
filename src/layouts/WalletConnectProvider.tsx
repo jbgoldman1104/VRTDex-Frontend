@@ -13,9 +13,12 @@ import { SeiWalletProvider } from "@sei-js/react"
 const WalletConnectProvider: React.FC<PropsWithChildren<{}>> = ({
   children,
 }) => {
-  const rpcUrl = "https://rpc.atlantic-2.seinetwork.io"
-  const restUrl = "https://rest.atlantic-2.seinetwork.io"
-  const chainId = "atlantic-2"
+  const rpcUrl = "https://rpc.sei-apis.com"
+  const restUrl = "https://rest.sei-apis.com"
+  const chainId = "pacific-1"
+  // const rpcUrl = "https://rpc.atlantic-2.seinetwork.io"
+  // const restUrl = "https://rest.atlantic-2.seinetwork.io"
+  // const chainId = "atlantic-2"
 
   return (
     //Alternatively you can define your own custom wallet (see Keplr tab)

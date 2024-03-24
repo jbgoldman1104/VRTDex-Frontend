@@ -12,7 +12,7 @@ import Button from "components/Button"
 import SwapTxHash from "./SwapTxHash"
 import SwapTxInfo from "./SwapTxInfo"
 import styles from "./Result.module.scss"
-
+import { useNavigate } from "react-router-dom"
 import { ExecuteResult } from "@cosmjs/cosmwasm-stargate"
 
 import axios from "rest/request"
@@ -44,6 +44,7 @@ enum STATUS {
 
 const Result = ({ response, error, onFailure, parserKey }: ResultProps) => {
   const network = useNetwork()
+  const navigate = useNavigate()
   const config = {
     /**
      * The base URL to which LCD requests will be made.
@@ -225,7 +226,7 @@ const Result = ({ response, error, onFailure, parserKey }: ResultProps) => {
 
   const button = {
     [STATUS.SUCCESS]: (
-      <Button onClick={() => window.location.reload()} size="swap" submit>
+      <Button onClick={() => navigate(`/swap`)} size="swap" submit>
         Done
       </Button>
     ),
@@ -236,7 +237,7 @@ const Result = ({ response, error, onFailure, parserKey }: ResultProps) => {
       </Button>
     ),
     [STATUS.TIMEOUT]: (
-      <Button onClick={() => window.location.reload()} size="swap" submit>
+      <Button onClick={() => navigate(`/swap`)} size="swap" submit>
         Done
       </Button>
     ),

@@ -34,10 +34,21 @@ export default function Navbar() {
             <li>
               <NavLink
                 to="/"
+                className={`px-5 py-3 lg:p-0 flex items-center relative hover:lg:text-white`}
+                onClick={() =>
+                  window.open("https://nft-marketplace.vrtoken.com/", "_blank")
+                }
+              >
+                NFT Marketplace
+              </NavLink>
+            </li>
+            <li>
+              <NavLink
+                to="/"
                 className={`px-5 py-3 lg:p-0 flex items-center relative hover:lg:text-white active`}
                 onClick={() => window.open("/whitepaper.pdf", "_blank")}
               >
-                Litepaper
+                Whitepaper
               </NavLink>
             </li>
             <li>

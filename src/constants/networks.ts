@@ -15,16 +15,17 @@ interface TerraswapNetwork {
   }
 }
 
-export const AVAILABLE_CHAIN_ID_LIST = ["atlantic-2"]
+export const AVAILABLE_CHAIN_ID_LIST = ["pacific-1"]
+// export const AVAILABLE_CHAIN_ID_LIST = ["atlantic-2"]
 
 const terraswapNetworks: Record<string, TerraswapNetwork> = {
   "pacific-1": {
-    factory: "terra1466nf3zuxpya8q9emxukd7vftaf6h4psr0a07srl5zw74zh84yjqxl5qul",
+    factory: "sei1azv6k99zpynf3s7vts62p4asfppc4se8x0073gz3wagqx4ypr55sn7artn",
     service:
       process.env.REACT_APP_MAINNET_SERVICE_URL || "https://api.terraswap.io/",
     dashboard: process.env.REACT_APP_MAINNET_DASHBOARD_URL,
-    router: "terra13ehuhysn5mqjeaheeuew2gjs785f6k7jm8vfsqg3jhtpkwppcmzqcu7chk",
-    fee: { gasPrice: "0.15", amount: "1518", gas: "500000" },
+    router: "sei1sqzzv42479yyjrtjlezxk6u3dmx8qjha44mkqs5tha20g6dxp8cqw0nsjz",
+    fee: { gasPrice: "0.1", amount: "1518", gas: "1000000" },
   },
   "atlantic-2": {
     factory: "sei183x2m85wzczclrl5940lscylsufjr7gd346kt6gyes8wzt7p80cqjpmxh7",
